@@ -1,21 +1,8 @@
-Shuttle.Esb.Module.PurgeQueues
-===================
+# Shuttle.Esb.Module.PurgeQueues
 
-This package will contain common modules that extend [Shuttle.Esb](http://shuttle.github.io/shuttle-esb/) functionality.
+The PurgeQueues module for Shuttle.Esb clears the specified queues on startup.
 
-### Purge Inbox Module
-
-The module will attach the `PurgeInboxObserver` to the `OnAfterInitializeQueueFactories` event of the `StartupPipeline` and purges the inbox work queue if the relevant queue implementation has implemented the `IPurgeQueue` interface.  If it hasn't a warning is logged.
-
-```c#
-	var bus = ServiceBus
-		.Create(c => c.AddModule(new PurgeInboxModule())
-		.Start();
-```
-
-### Purge Queues Module
-
-The module will attach the `PurgeQueuesObserver` to the `OnAfterInitializeQueueFactories` event of the `StartupPipeline` and purges the configured queues if the relevant queue implementation has implemented the `IPurgeQueue` interface.  If it hasn't a warning is logged.
+The module will attach the `PurgeQueuesObserver` to the `OnAfterInitializeQueueFactories` event of the `StartupPipeline` and purges the configured queues if the relevant queue implementation has implemented the `IPurgeQueue` interface.  If the relevant queue implementation has *not* implemented the `IPurgeQueue` interface only a warning is logged.
 
 ```xml
 <configuration>
@@ -32,74 +19,4 @@ The module will attach the `PurgeQueuesObserver` to the `OnAfterInitializeQueueF
 </configuration>
 ```
 
-```c#
-	var bus = ServiceBus
-		.Create(c => c.AddModule(new PurgeQueuesModule())
-		.Start();
-```
-
-### Message Forwarding Module
-
-The module will attach the `MessageForwardingObserver` to the `OnAfterHandleMessage` and then send the handled message on to any defined endpoints.
-
-```xml
-<configuration>
-	<configSections>
-		<section name="messageForwarding" type="Shuttle.Esb.Module.PurgeQueues.MessageForwardingSection, Shuttle.Esb.Module.PurgeQueues"/>
-	</configSections>
-
-	<messageForwarding>
-		<forwardingRoutes>
-			<messageRoute uri="msmq://./inbox">
-				<add specification="StartsWith" value="Shuttle.Messages1" />
-				<add specification="StartsWith" value="Shuttle.Messages2" />
-			</messageRoute>
-			<messageRoute uri="sql://./inbox">
-				<add specification="TypeList" value="DoSomethingCommand" />
-			</messageRoute>
-		</forwardingRoutes>
-	</messageForwarding>
-</configuration>
-```
-
-```c#
-	var bus = ServiceBus
-		.Create(c => c.AddModule(new MessageForwardingModule())
-		.Start();
-```
-
-### ActiveTimeRange
-
-The module will attach the `ActiveTimeRangeObserver` to the `OnPipelineStarting` event of all pipelines except the `StartupPipeline` and abort the pipeline if the current time is not within the active time range.
-
-```xml
-  <appSettings>
-    <add key="ActiveFromTime" value="*"/>
-    <add key="ActiveToTime" value="*"/>
-  </appSettings>
-```
-
-The default value of `*` indicates the whole day and your pipelines will never be stopped.
-
-```c#
-	var bus = ServiceBus
-		.Create(c => c.AddModule(new ActiveTimeRangeModule())
-		.Start();
-```
-
-### Corrupt Transport Message Module
-
-It will log any transport messages that fail deserailization via the `ServiceBus..Events.TransportMessageDeserializationException` event to a folder as specified in the application configuration `appSettings` key with name `CorruptTransportMessageFolder`:
-
-```xml
-  <appSettings>
-    <add key="CorruptTransportMessageFolder" value="d:\shuttle-corrupt-messages"/>
-  </appSettings>
-```
-
-```c#
-	var bus = ServiceBus
-		.Create(c => c.AddModule(new CorruptTransportMessageModule())
-		.Start();
-```
-
+The module will register/resolve itself using [Shuttle.Core container bootstrapping](http://shuttle.github.io/shuttle-core/overview-container/#bootstrapping).
