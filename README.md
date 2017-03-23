@@ -19,4 +19,4 @@ The module will attach the `PurgeQueuesObserver` to the `OnAfterInitializeQueueF
 </configuration>
 ```
 
-The module will register/resolve itself using [Shuttle.Core container bootstrapping](http://shuttle.github.io/shuttle-core/overview-container/#bootstrapping).
+The module will register itself using the [container bootstrapping](http://shuttle.github.io/shuttle-core/overview-container/#Bootstrapping).
