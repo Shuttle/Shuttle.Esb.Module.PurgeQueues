@@ -1,4 +1,7 @@
-﻿using Shuttle.Core.Infrastructure;
+﻿using Shuttle.Core.Configuration;
+using Shuttle.Core.Contract;
+using Shuttle.Core.Logging;
+using Shuttle.Core.Pipelines;
 
 namespace Shuttle.Esb.Module.PurgeQueues
 {
@@ -9,7 +12,7 @@ namespace Shuttle.Esb.Module.PurgeQueues
 
 		public PurgeQueuesObserver(IQueueManager queueManager)
 		{
-            Guard.AgainstNull(queueManager, "queueManager");
+            Guard.AgainstNull(queueManager, nameof(queueManager));
 
 		    _queueManager = queueManager;
 		    _log = Log.For(this);
@@ -19,7 +22,7 @@ namespace Shuttle.Esb.Module.PurgeQueues
 		{
 			var section = ConfigurationSectionProvider.Open<PurgeQueuesSection>("shuttle", "purgeQueues");
 
-			if (section == null || section.Queues == null)
+			if (section?.Queues == null)
 			{
 				return;
 			}
@@ -31,7 +34,7 @@ namespace Shuttle.Esb.Module.PurgeQueues
 
 				if (purge == null)
 				{
-					_log.Warning(string.Format(PurgeQueuesResources.IPurgeQueueNotImplemented, queue.GetType().FullName));
+					_log.Warning(string.Format(Resources.IPurgeQueueNotImplemented, queue.GetType().FullName));
 
 					continue;
 				}

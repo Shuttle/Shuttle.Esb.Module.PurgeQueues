@@ -1,5 +1,6 @@
 ﻿using System;
-using Shuttle.Core.Infrastructure;
+using Shuttle.Core.Contract;
+using Shuttle.Core.Pipelines;
 
 namespace Shuttle.Esb.Module.PurgeQueues
 {
@@ -10,8 +11,8 @@ namespace Shuttle.Esb.Module.PurgeQueues
 
         public PurgeQueuesModule(IPipelineFactory pipelineFactory, PurgeQueuesObserver purgeQueuesObserver)
         {
-            Guard.AgainstNull(pipelineFactory, "pipelineFactory");
-            Guard.AgainstNull(purgeQueuesObserver, "purgeQueuesObserver");
+            Guard.AgainstNull(pipelineFactory, nameof(pipelineFactory));
+            Guard.AgainstNull(purgeQueuesObserver, nameof(purgeQueuesObserver));
 
             _purgeQueuesObserver = purgeQueuesObserver;
 
@@ -20,7 +21,8 @@ namespace Shuttle.Esb.Module.PurgeQueues
 
         private void PipelineCreated(object sender, PipelineEventArgs e)
         {
-            if (!e.Pipeline.GetType().FullName.Equals(_startupPipelineName, StringComparison.InvariantCultureIgnoreCase))
+            if (!(e.Pipeline.GetType().FullName ?? string.Empty)
+                .Equals(_startupPipelineName, StringComparison.InvariantCultureIgnoreCase))
             {
                 return;
             }
