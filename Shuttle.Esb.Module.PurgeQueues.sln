@@ -1,11 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2020
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32106.194
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shuttle.Esb.Module.PurgeQueues", "Shuttle.Esb.Module.PurgeQueues\Shuttle.Esb.Module.PurgeQueues.csproj", "{718B501B-7BBF-4886-916B-BEC546FF929B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shuttle.Esb.Module.PurgeQueues", "Shuttle.Esb.Module.PurgeQueues\Shuttle.Esb.Module.PurgeQueues.csproj", "{718B501B-7BBF-4886-916B-BEC546FF929B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shuttle.Esb.Module.PurgeQueues.Tests", "Shuttle.Esb.Module.PurgeQueues.Tests\Shuttle.Esb.Module.PurgeQueues.Tests.csproj", "{620DD4AB-F8C6-4CAC-9EF2-3D3457D8357F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shuttle.Esb.Module.PurgeQueues.Tests", "Shuttle.Esb.Module.PurgeQueues.Tests\Shuttle.Esb.Module.PurgeQueues.Tests.csproj", "{620DD4AB-F8C6-4CAC-9EF2-3D3457D8357F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3B8A6C57-20CA-46A2-8C9B-452C1E691BDE}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
