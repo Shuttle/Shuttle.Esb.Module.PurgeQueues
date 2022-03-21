@@ -23,7 +23,7 @@ The module will attach the `PurgeQueuesObserver` to the `OnAfterInitializeQueueF
 </configuration>
 ```
 
-# Registration / Activation
+## Registration / Activation
 
 The required components may be registered by calling `ComponentRegistryExtensions.RegisterPurgeQueues(IComponentRegistry)`.
 
