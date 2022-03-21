@@ -1,4 +1,8 @@
-# Shuttle.Esb.Module.PurgeQueues
+# Purge Queues
+
+```
+PM> Install-Package Shuttle.Esb.Module.PurgeQueues
+```
 
 The PurgeQueues module for Shuttle.Esb clears the specified queues on startup.
 
