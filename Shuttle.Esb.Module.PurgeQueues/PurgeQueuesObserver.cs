@@ -1,46 +1,38 @@
-﻿using Shuttle.Core.Configuration;
+﻿using Microsoft.Extensions.Options;
 using Shuttle.Core.Contract;
-using Shuttle.Core.Logging;
 using Shuttle.Core.Pipelines;
 
 namespace Shuttle.Esb.Module.PurgeQueues
 {
-	public class PurgeQueuesObserver : IPipelineObserver<OnAfterConfigureQueueManager>
-	{
-	    private readonly IQueueManager _queueManager;
-	    private readonly ILog _log;
+    public class PurgeQueuesObserver : IPipelineObserver<OnAfterConfigureQueues>
+    {
+        private readonly PurgeQueuesOptions _purgeQueuesOptions;
+        private readonly IQueueService _queueService;
 
-		public PurgeQueuesObserver(IQueueManager queueManager)
-		{
-            Guard.AgainstNull(queueManager, nameof(queueManager));
+        public PurgeQueuesObserver(IOptions<PurgeQueuesOptions> purgeQueuesOptions, IQueueService queueService)
+        {
+            Guard.AgainstNull(purgeQueuesOptions, nameof(purgeQueuesOptions));
+            Guard.AgainstNull(purgeQueuesOptions.Value, nameof(purgeQueuesOptions.Value));
+            Guard.AgainstNull(queueService, nameof(queueService));
 
-		    _queueManager = queueManager;
-		    _log = Log.For(this);
-		}
+            _purgeQueuesOptions = purgeQueuesOptions.Value;
+            _queueService = queueService;
+        }
 
-	    public void Execute(OnAfterConfigureQueueManager pipelineEvent)
-		{
-			var section = ConfigurationSectionProvider.Open<PurgeQueuesSection>("shuttle", "purgeQueues");
+        public void Execute(OnAfterConfigureQueues pipelineEvent)
+        {
+            foreach (var uri in _purgeQueuesOptions.Uris)
+            {
+                var queue = _queueService.Get(uri);
+                var purge = queue as IPurgeQueue;
 
-			if (section?.Queues == null)
-			{
-				return;
-			}
+                if (purge == null)
+                {
+                    continue;
+                }
 
-			foreach (PurgeQueueElement queueElement in section.Queues)
-			{
-				var queue = _queueManager.GetQueue(queueElement.Uri);
-				var purge = queue as IPurgeQueue;
-
-				if (purge == null)
-				{
-					_log.Warning(string.Format(Resources.IPurgeQueueNotImplemented, queue.GetType().FullName));
-
-					continue;
-				}
-
-				purge.Purge();
-			}
-		}
-	}
+                purge.Purge();
+            }
+        }
+    }
 }
