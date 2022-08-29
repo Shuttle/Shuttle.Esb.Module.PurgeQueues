@@ -4,7 +4,7 @@ using Shuttle.Core.Pipelines;
 
 namespace Shuttle.Esb.Module.PurgeQueues
 {
-    public class PurgeQueuesObserver : IPipelineObserver<OnAfterConfigureQueues>
+    public class PurgeQueuesObserver : IPipelineObserver<OnAfterConfigure>
     {
         private readonly PurgeQueuesOptions _purgeQueuesOptions;
         private readonly IQueueService _queueService;
@@ -19,19 +19,11 @@ namespace Shuttle.Esb.Module.PurgeQueues
             _queueService = queueService;
         }
 
-        public void Execute(OnAfterConfigureQueues pipelineEvent)
+        public void Execute(OnAfterConfigure pipelineEvent)
         {
             foreach (var uri in _purgeQueuesOptions.Uris)
             {
-                var queue = _queueService.Get(uri);
-                var purge = queue as IPurgeQueue;
-
-                if (purge == null)
-                {
-                    continue;
-                }
-
-                purge.Purge();
+                (_queueService.Get(uri) as IPurgeQueue)?.Purge();
             }
         }
     }
