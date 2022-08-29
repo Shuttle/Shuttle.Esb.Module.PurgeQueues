@@ -11,5 +11,29 @@ The module will attach the `PurgeQueuesObserver` to the `OnAfterConfigure` event
 ## Configuration
 
 ```c#
-services.AddPurgeQueuesModule();
+services.AddPurgeQueuesModule(builder => 
+{
+	builder.Options.Uris = new List<string>
+	{
+		"scheme-a://configuration-name/queue-a",
+		"scheme-b://configuration-name/queue-b"
+	};
+});
+```
+
+The default JSON settings structure is as follows:
+
+```json
+{
+  "Shuttle": {
+    "Modules": {
+      "MessageForwarding": {
+        "Uris": [
+          "scheme-a://configuration-name/queue-a",
+          "scheme-b://configuration-name/queue-b"
+		]
+	  }
+	}
+  }
+}
 ```
